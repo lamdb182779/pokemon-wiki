@@ -1,0 +1,45 @@
+@import url('https://fonts.googleapis.com/css2?family=Barlow+Condensed:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base{
+    html,
+    body{
+        @apply min-h-screen;
+        @apply w-screen; 
+    }
+
+    body::-webkit-scrollbar{
+        width: 0;
+    }
+
+    h1{
+        @apply text-9xl;
+    }
+    h2{
+        @apply text-7xl;
+    }
+    h3{
+        @apply text-5xl;
+    }
+    h4{
+        @apply text-3xl;
+    }
+    h5{
+        @apply text-xl;
+    }
+    h6{
+        @apply text-base;
+    }
+}
+
+@layer utilities{
+    .shadow-light-even{
+        box-shadow: 0 0 2.5rem 0 rgba(255, 255, 255, 0.5);
+    }
+    .shadow-dark-even{
+        box-shadow: 0 0 2.5rem 0 rgba(0, 0, 0, 0.5);
+    }
+}
