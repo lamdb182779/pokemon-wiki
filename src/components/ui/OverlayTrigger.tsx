@@ -5,6 +5,7 @@ import { FC, useEffect, useState, useRef } from "react"
 const OverlayTrigger: FC<Partial<OverlayTrigger>> = (props) => {
     const containerRef = useRef<HTMLDivElement | null>(null)
     const overlayRef = useRef<HTMLDivElement | null>(null)
+    const dark: boolean = props?.dark ? props.dark : false
     const rounded: string = props?.rounded && props.rounded.startsWith("rounded") ? props.rounded : ""
     const animation: string = props?.animation ? props.animation : "fade"
     const trigger: string = props?.trigger && ["hover", "click"].includes(props.trigger) ? props.trigger : "hover"
@@ -65,13 +66,13 @@ const OverlayTrigger: FC<Partial<OverlayTrigger>> = (props) => {
                 const width = overlayRef.current.offsetWidth
                 const height = overlayRef.current.offsetHeight
 
-                if (distanceToRight > width && distanceToTop >= 0 && distanceToBottom >= 0) {
+                if (distanceToRight > width && distanceToTop >= height / 2 && distanceToBottom >= height / 2) {
                     setPosition("right")
-                } else if (distanceToBottom > height && distanceToLeft >= 0 && distanceToRight >= 0) {
+                } else if (distanceToBottom > height && distanceToLeft >= width / 2 && distanceToRight >= width / 2) {
                     setPosition("bottom")
-                } else if (distanceToLeft > width && distanceToTop >= 0 && distanceToBottom >= 0) {
+                } else if (distanceToLeft > width && distanceToTop >= height / 2 && distanceToBottom >= height / 2) {
                     setPosition("left")
-                } else if (distanceToTop > height && distanceToLeft >= 0 && distanceToRight >= 0) {
+                } else if (distanceToTop > height && distanceToLeft >= width / 2 && distanceToRight >= width / 2) {
                     setPosition("top")
                 } else {
                     setPosition("bottom-end")
@@ -89,8 +90,8 @@ const OverlayTrigger: FC<Partial<OverlayTrigger>> = (props) => {
             className={clsx('overlay relative', props?.className && props.className)}>
             {props?.children}
             <div ref={overlayRef} className={clsx('absolute p-2', positionClasses)}>
-                <div className={clsx('overlay-trigger border p-4', { 'bg-black text-white': props?.dark ? props.dark : false },
-                    { 'bg-white text-black': props?.dark ? !props.dark : true },
+                <div className={clsx('overlay-trigger border p-4', { 'bg-black text-white': dark },
+                    { 'bg-white text-black': !dark },
                     { 'opacity-0': animation === "fade" ? trigger === "hover" ? !isHover : !isClick : false },
                     { 'scale-0': animation === "pulse" ? trigger === "hover" ? !isHover : !isClick : false },
                     { 'transition-all': animation }, rounded)}>

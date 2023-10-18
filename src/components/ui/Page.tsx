@@ -1,12 +1,12 @@
-import { useState, FC, useRef } from 'react'
+import { useState, FC, useRef, MouseEvent } from 'react'
 import { Page, Pagination } from '../../constains/interface'
 import clsx from 'clsx'
 import OverlayTrigger from './OverlayTrigger'
 
 const Page: FC<Partial<Page>> = (props) => {
     const containerRef = useRef<HTMLDivElement | null>(null)
-    const inputRef = useRef<HTMLInputElement | null>(null)
     const dark: boolean = props?.dark ? props.dark : false
+    const size: string = props?.size && ["lg", "md", "sm"].includes(props.size) ? props.size : "md"
     const [page, setPage] = useState<number>(1)
     const length: number = props && props.total && props.pagesize ? Math.floor((props.total - 1) / props.pagesize) + 1 : 0
     const handleChange = (pg: number) => {
@@ -16,22 +16,31 @@ const Page: FC<Partial<Page>> = (props) => {
         }
     }
     const handleEllipsis = () => {
+        const handleGoto = (event: MouseEvent) => {
+            const target = event.target as Node
+            const parent = target.parentNode
+            const input = parent?.querySelector('input')
+            input && !isNaN(parseInt(input.value)) && handleChange(parseInt(input.value))
+        }
         return (
             <div className='flex gap-1 h-6'>
                 <p className='w-10 flex items-center'>Go to:</p>
-                <input className='text-black w-10' ref={inputRef} />
-                <div className='border cursor-pointer flex items-center px-1' onClick={() => inputRef.current && !isNaN(parseInt(inputRef.current?.value)) && handleChange(parseInt(inputRef.current?.value))}>Go</div>
+                <input className='text-black w-10 px-1' />
+                <div className='border cursor-pointer flex items-center px-1' onClick={event => handleGoto(event)}>Go</div>
             </div>
         )
     }
 
     const Pagination: FC<Partial<Pagination>> = (props) => {
         return (
-            <div onClick={() => props?.onClick && props.onClick()} className={clsx(props?.className ? props.className : '', 'border w-12 h-12 flex items-center justify-center cursor-pointer hover:scale-105',
+            <div onClick={() => props?.onClick && props.onClick()} className={clsx(props?.className ? props.className : '', 'border flex items-center justify-center cursor-pointer hover:scale-105',
                 { 'font-bold text-2xl': props?.page ? props.page === page : false },
                 { 'shadow-light-even': dark && props?.page ? props.page === page : false },
                 { 'shadow-dark-even': !dark && props?.page ? props.page === page : false },
                 { 'bg-zinc-700 text-white': dark },
+                { 'w-8 h-8': size === "sm" },
+                { 'w-12 h-12': size === "md" },
+                { 'w-16 h-16': size === "lg" },
                 { 'bg-white text-black': !dark })}>
                 {props?.children ? props.children : <></>}
             </div>
